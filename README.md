@@ -44,48 +44,8 @@
 
 <hr/>
 
-<h2 id="requirements">۲) پیش‌نیازها و پورت‌ها</h2>
 
-<ul>
-  <li>Docker و Docker Compose</li>
-  <li>پورت‌ها: 8000 (Django)، 9000 (FastAPI)، 6379 (Redis)، 6432 (PgBouncer - اختیاری)</li>
-</ul>
-
-<hr/>
-
-<h2 id="env">۳) پیکربندی محیط (.env)</h2>
-
-<p>نمونهٔ حداقلی:</p>
-<pre dir="rtl"><code>POSTGRES_DB=walletdb
-POSTGRES_USER=wallet
-POSTGRES_PASSWORD=walletpass
-
-DJANGO_SECRET=devsecret
-DJANGO_DEBUG=1
-DJANGO_ALLOWED_HOSTS=*
-
-REDIS_URL=redis://redis:6379/0
-INTERNAL_TOKEN=ChangeMeInternalToken123
-
-# Celery
-CELERY_BROKER_URL=redis://redis:6379/0
-CELERY_RESULT_BACKEND=redis://redis:6379/1
-
-# JWT
-ACCESS_TOKEN_LIFETIME_MINUTES=60
-REFRESH_TOKEN_LIFETIME_DAYS=7
-
-# اختیاری‌ها (برای دمو/لود بالا)
-ASYNC_SETTLEMENT=0        # 0 = سینک (پیش‌فرض برای تست)، 1 = آسنک با Celery
-RL_WINDOW_SEC=10          # پنجرهٔ Rate Limit
-RL_MAX_REQUESTS=300       # تعداد مجاز در هر پنجره
-SETTLEMENT_URL=http://settlement:9000/api/settlement/withdraw</code></pre>
-
-<p><b>نکته:</b> برای تست‌ها، اتصال مستقیم به Postgres را توصیه می‌کنیم (<code>DB_HOST=db</code> و <code>DB_PORT=5432</code>).</p>
-
-<hr/>
-
-<h2 id="bootstrap">۴) راه‌اندازی سریع (صفر تا صد)</h2>
+<h2 id="bootstrap">۴) راه‌اندازی سریع </h2>
 
 <ol>
   <li>بالا آوردن سرویس‌ها:
