@@ -97,7 +97,7 @@ SETTLEMENT_URL=http://settlement:9000/api/settlement/withdraw</code></pre>
   </li>
 
   <li><b>ورود ادمین و گرفتن توکن (ADMIN_ACCESS):</b>
-<pre dir="rtl"><code>ADMIN_ACCESS=$(curl -s -X POST http://127.0.0.1:8000/api/v1/auth/token   -H "Content-Type: application/json"   -d '{"username":"admin","password":"&lt;ADMIN_PASSWORD&gt;"}'   | python -c "import sys,json; print(json.load(sys.stdin)['access'])")</code></pre>
+<pre dir="rtl"><code> curl -s -X POST http://127.0.0.1:8000/api/v1/auth/token   -H "Content-Type: application/json"   -d '{"username":"admin","password":"&lt;ADMIN_PASSWORD&gt;"}'</code></pre>
   </li>
 
   <li>ثبت پذیرنده (API) — <i>نیاز به ادمین ندارد</i>:
