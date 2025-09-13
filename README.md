@@ -115,12 +115,13 @@
 <p>مشاهدهٔ وضعیت‌ها:</p>
 
 <pre dir="rtl"><code># اعتبار یک پذیرنده (مثلاً m2)
-"docker compose exec db psql -U wallet -d walletdb -c 
+docker compose exec db psql -U wallet -d walletdb -c" 
 select u.username, mc.credit_limit, mc.utilized_amount
 from payments_merchantcredit mc
 join payments_merchant m on m.id = mc.merchant_id
 join auth_user u on u.id = m.user_id
-where u.username='m2';"
+where u.username='m2';
+"
 
 
 # موجودی استخر
