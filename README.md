@@ -12,14 +12,13 @@
 <ol>
   <li><a href="#overview">نمای کلی</a></li>
   <li><a href="#requirements">پیش‌نیازها و پورت‌ها</a></li>
-  <li><a href="#env">پیکربندی محیط (.env)</a></li>
-  <li><a href="#bootstrap">راه‌اندازی سریع (صفر تا صد)</a></li>
+  <li><a href="#bootstrap">راه‌اندازی سریع </a></li>
   <li><a href="#seed">Seed برای لود تست (۱۰۰۰ پذیرنده)</a></li>
   <li><a href="#security">امنیت سرویس تسویه (FastAPI)</a></li>
   <li><a href="#testing">تست‌های Unit و Integration</a></li>
   <li><a href="#load">لود تست تمیز با توکن‌های پیش‌تولید</a></li>
   <li><a href="#profiling">پروفایلینگ DB/Redis/PgBouncer</a></li>
-  <li><a href="#requirements-mapping">نگاشت الزامات به پیاده‌سازی</a></li>
+  <li><a href="#requirements-mapping"> الزامات پیاده‌سازی</a></li>
   <li><a href="#troubleshoot">اشکال‌زدایی سریع</a></li>
 </ol>
 
@@ -115,13 +114,13 @@
 
 <p>مشاهدهٔ وضعیت‌ها:</p>
 <pre dir="rtl"><code># اعتبار یک پذیرنده (مثلاً m2)
-docker compose exec db psql -U wallet -d walletdb -c "
+docker compose exec db psql -U wallet -d walletdb -c 
 select u.username, mc.credit_limit, mc.utilized_amount
 from payments_merchantcredit mc
 join payments_merchant m on m.id = mc.merchant_id
 join auth_user u on u.id = m.user_id
 where u.username='m2';
-"
+
 
 # موجودی استخر
 docker compose exec db psql -U wallet -d walletdb -c "select id, available_amount from payments_creditpool;"</code></pre>
@@ -192,7 +191,7 @@ docker stats</code></pre>
 
 <hr/>
 
-<h2 id="requirements-mapping">۱۰) نگاشت الزامات به پیاده‌سازی (✅)</h2>
+<h2 id="requirements-mapping">۱۰)  الزامات پیاده‌سازی (✅)</h2>
 
 <ul>
   <li>✅ <b>منطق واریز پول در FastAPI</b>: Django پس از احراز هویت و بررسی اعتبار، سرویس FastAPI را صدا می‌زند.</li>
