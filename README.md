@@ -114,7 +114,7 @@ SETTLEMENT_URL=http://settlement:9000/api/settlement/withdraw</code></pre>
 
   <div dir="rtl" align="right">
 
-<h3>برداشت با حداقل وابستگی (کپی‌ـ‌پیست آسان)</h3>
+<h3>برداشت</h3>
 
 <ol>
   <li><b>گرفتن توکن پذیرنده (خروجی را نگاه کن و مقدار access را کپی کن)</b>:
