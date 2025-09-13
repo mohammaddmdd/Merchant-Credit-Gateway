@@ -16,7 +16,7 @@
   <li><a href="#seed">Seed برای لود تست (۱۰۰۰ پذیرنده)</a></li>
   <li><a href="#security">امنیت سرویس تسویه (FastAPI)</a></li>
   <li><a href="#testing">تست‌های Unit و Integration</a></li>
-  <li><a href="#load">لود تست تمیز با توکن‌های پیش‌تولید</a></li>
+  <li><a href="#load">لود تست با توکن‌های پیش‌تولید</a></li>
   <li><a href="#profiling">پروفایلینگ DB/Redis/PgBouncer</a></li>
   <li><a href="#requirements-mapping"> الزامات پیاده‌سازی</a></li>
   <li><a href="#troubleshoot">اشکال‌زدایی سریع</a></li>
@@ -163,10 +163,10 @@ docker compose exec db psql -U wallet -d postgres -c "DROP DATABASE IF EXISTS te
 
 <hr/>
 
-<h2 id="load">۸) لود تست تمیز با توکن‌های پیش‌تولید</h2>
+<h2 id="load">۸) لود تست با توکن‌های پیش‌تولید</h2>
 
 <p><b>گام ۱)</b> پیش‌تولید توکن‌ها و ذخیره در Redis</p>
-<pre dir="rtl"><code>docker compose exec wallet_web   python manage.py shell -c "exec(open('scripts/preload_tokens.py').read())"</code></pre>
+<pre dir="rtl"><code>docker compose exec -T wallet_web python manage.py shell < scripts/preload_tokens.py</code></pre>
 
 <p><b>گام ۲)</ب> اجرای Locust</p>
 <pre dir="rtl"><code>N_TOKENS=1000 REDIS_URL=redis://127.0.0.1:6379/0 TARGET_HOST=http://127.0.0.1:8000 TOKENS_KEY=locust:tokens WITHDRAW_AMOUNT=1.00 locust -f tests/load/locustfile.py --headless   --users 500 --spawn-rate 50 --run-time 2m</code></pre>
