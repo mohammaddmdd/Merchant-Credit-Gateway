@@ -82,18 +82,7 @@
   -H "Content-Type: application/json" \
   -d '{"username":"m1","password":"p"}'</code></pre>
   </li>
-
-  <li><b>توکن را در یک متغیر قرار بده (جایگزین کن):</b>
-<pre><code>ACCESS='&lt;PASTE_ACCESS_TOKEN&gt;'</code></pre>
-  </li>
-
-  <li><b>ساخت کلید Idempotency بدون Python</b>:
-<pre><code># لینوکس/مک (ترجیحی)
-IDEM=$(uuidgen)
-
-# اگر uuidgen ندارید (Fallback عمومی)
-IDEM=$(date +%s%N)</code></pre>
-  </li>
+  
 
   <li><b>درخواست برداشت</b>:
 <pre><code>curl -s -X POST http://127.0.0.1:8000/api/v1/withdrawals \
