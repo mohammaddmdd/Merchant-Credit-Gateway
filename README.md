@@ -213,8 +213,11 @@ docker stats</code></pre>
   <li><b>401 از سرویس تسویه</b>: هدر <code>X-Internal-Token</code> را بررسی کنید.</li>
   <li><b>429 در لود تست</b>: Rate Limit را افزایش دهید یا غیرفعال کنید.</li>
   <li><b>503/Timeout</b>: ظرفیت Gunicorn/UVicorn/Workerها را بالا ببرید؛ <code>CONN_MAX_AGE</code> و <code>statement_timeout</code> را بهینه کنید.</li>
-  <li><ب>مشکل تست با PgBouncer</ب>: برای تست‌ها از <code>DB_HOST=db</code> و <code>DB_PORT=5432</code> استفاده کنید.</li>
   <li><b>Drop نشدن DB تست</b>: <code>pg_terminate_backend</code> و سپس <code>DROP DATABASE</code>.</li>
 </ul>
 
 </div>
+
+
+<img width="1909" height="892" alt="Screenshot 2025-09-14 033607" src="https://github.com/user-attachments/assets/7048c2a3-ca04-4067-9f71-9c845e085ef7" />
+
