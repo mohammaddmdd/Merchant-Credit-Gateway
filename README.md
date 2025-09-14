@@ -175,6 +175,8 @@ docker compose exec db psql -U wallet -d postgres -c "DROP DATABASE IF EXISTS te
 
 <hr/>
 
+<img width="1909" height="892" alt="Screenshot 2025-09-14 033607" src="https://github.com/user-attachments/assets/7048c2a3-ca04-4067-9f71-9c845e085ef7" />
+
 <h2 id="profiling">۹) پروفایلینگ DB/Redis/PgBouncer</h2>
 
 <pre dir="rtl"><code># PostgreSQL
@@ -219,5 +221,4 @@ docker stats</code></pre>
 </div>
 
 
-<img width="1909" height="892" alt="Screenshot 2025-09-14 033607" src="https://github.com/user-attachments/assets/7048c2a3-ca04-4067-9f71-9c845e085ef7" />
 
