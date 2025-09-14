@@ -1,0 +1,128 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: ["postgres","-c","max_connections=300","-c","shared_buffers=256MB"]
+    ports:
+      - '5432:5432'
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - '6379:6379'
+
+  # --- PgBouncer: transaction pooling ---
+  pgbouncer:
+      image: edoburu/pgbouncer
+      environment:
+        DB_HOST: db
+        DB_PORT: 5432
+        DB_USER: ${POSTGRES_USER}
+        DB_PASSWORD: ${POSTGRES_PASSWORD}
+        DB_NAME: ${POSTGRES_DB}
+
+        POOL_MODE: transaction
+
+        LISTEN_ADDR: 0.0.0.0
+        LISTEN_PORT: 6432
+
+        AUTH_TYPE: plain
+        ADMIN_USERS: ${POSTGRES_USER}
+
+        MAX_CLIENT_CONN: 2000
+        DEFAULT_POOL_SIZE: 50
+        RESERVE_POOL_SIZE: 20
+      ports:
+        - "6432:6432"
+      depends_on:
+        - db
+      healthcheck:
+        test: ["CMD-SHELL", "bash -lc ': < /dev/tcp/127.0.0.1/6432'"]
+        interval: 5s
+        timeout: 3s
+        retries: 20
+      restart: unless-stopped
+
+  wallet_web:
+      build:
+        context: ./services/wallet_core
+        dockerfile: ../../docker/Dockerfile.django
+      depends_on:
+        pgbouncer:
+          condition: service_started
+        redis:
+          condition: service_started
+      volumes:
+        - ./services/wallet_core:/app
+      ports:
+        - '8000:8000'
+      environment:
+        - DB_HOST=pgbouncer
+        - DB_PORT=6432
+        - DB_CONN_MAX_AGE=0
+        - DB_STATEMENT_TIMEOUT_MS=5000
+        - DB_CONNECT_TIMEOUT_S=3
+        - RL_WINDOW_SEC=60
+        - RL_MAX_REQUESTS=120
+        - ASYNC_SETTLEMENT=0
+        - INTERNAL_TOKEN=${INTERNAL_TOKEN}
+        - POSTGRES_DB=${POSTGRES_DB}
+        - POSTGRES_USER=${POSTGRES_USER}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      command:
+        - bash
+        - -lc
+        - |
+          python - <<'PY'
+          import time, os, psycopg2
+          host=os.getenv('DB_HOST','pgbouncer'); port=int(os.getenv('DB_PORT','6432'))
+          user=os.getenv('POSTGRES_USER','wallet'); password=os.getenv('POSTGRES_PASSWORD','walletpass'); db=os.getenv('POSTGRES_DB','walletdb')
+          for i in range(60):
+              try:
+                  psycopg2.connect(host=host, port=port, user=user, password=password, dbname=db, connect_timeout=3).close()
+                  print('DB is ready via', host, port); break
+              except Exception as e:
+                  print('Waiting for DB/PgBouncer...', e); time.sleep(2)
+          else:
+              print('DB not ready, exiting', flush=True); exit(1)
+          PY
+          python manage.py migrate
+          gunicorn core.wsgi:application --bind 0.0.0.0:8000 --workers 4 --threads 4 --keep-alive 30
+
+  wallet_worker:
+    build:
+      context: ./services/wallet_core
+      dockerfile: ../../docker/Dockerfile.django
+    depends_on:
+      - pgbouncer
+      - redis
+    volumes:
+      - ./services/wallet_core:/app
+    command: celery -A core worker -l info --concurrency=4 --prefetch-multiplier=1
+    environment:
+      - DB_HOST=pgbouncer
+      - DB_PORT=6432
+      - DB_CONN_MAX_AGE=0
+      - DB_STATEMENT_TIMEOUT_MS=5000
+      - DB_CONNECT_TIMEOUT_S=3
+      - RL_WINDOW_SEC=60
+      - RL_MAX_REQUESTS=120
+      - ASYNC_SETTLEMENT=0
+      - INTERNAL_TOKEN=${INTERNAL_TOKEN}
+
+  settlement:
+    build:
+      context: ./services/settlement_service
+      dockerfile: ../../docker/Dockerfile.fastapi
+    ports:
+      - '9000:9000'
+
+volumes:
+  dbdata:
